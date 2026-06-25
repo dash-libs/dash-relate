@@ -1,0 +1,13 @@
+{
+  "listing_name": "DashOntology''and''Lineage — Ontology and Lineage",
+  "pypi_package": "dash-relate",
+  "short_description": "Define entity relationships and lineage for AI/LLM consumption — no Spark expertise required.",
+  "long_description": "Part of the Dashlibs suite for Databricks. Provides an ipywidgets notebook UI plus a Python API. Install with %pip install dash-relate and call dashrelate.launch() to open the interactive wizard.",
+  "categories": ["Data Engineering", "Developer Tools"],
+  "provider": "dash-libs",
+  "source_url": "https://github.com/dash-libs/dash-relate",
+  "documentation_url": "https://github.com/dash-libs/dash-relate/tree/main/docs/api",
+  "license": "Apache-2.0",
+  "supported_platforms": ["Databricks Runtime 12.x+"],
+  "install_instructions": "%pip install dash-relate"
+}
