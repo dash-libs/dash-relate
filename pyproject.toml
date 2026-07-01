@@ -3,18 +3,39 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [project]
-name = "dash-relate"
-version = "0.1.0"
-description = "Ontology, lineage, and relationship definitions for AI usage on Databricks"
+name = "dash-ontology"
+dynamic = ["version"]
+description = "Auto-inferred data ontology from lineage graphs — no AI tokens required"
 readme = "README.md"
 requires-python = ">=3.9"
 license = { text = "Apache-2.0" }
-authors = [{ name = "Darshan Shah", email = "darshan.innovation@icloud.com" }]
-keywords = ["databricks", "ontology", "lineage", "knowledge-graph", "ai"]
+authors = [{ name = "Darshan Shah", email = "darshan.innovation@gmail.com" }]
+keywords = ["databricks", "ontology", "lineage", "knowledge-graph", "data-catalog", "unity-catalog"]
+classifiers = [
+  "Development Status :: 3 - Alpha",
+  "Intended Audience :: Developers",
+  "Intended Audience :: Science/Research",
+  "Intended Audience :: Information Technology",
+  "License :: OSI Approved :: Apache Software License",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.9",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+]
 dependencies = ["ipywidgets>=8.0"]
 
 [project.optional-dependencies]
 dev = ["pytest", "pytest-cov", "hatch", "pdoc", "ruff"]
 
 [project.urls]
-Homepage = "https://github.com/darshan-innovation/dash-relate"
+Homepage = "https://github.com/dash-libs/dash-relate"
+
+[tool.hatch.version]
+path = "dashontology/__init__.py"
+
+[tool.hatch.build.targets.wheel]
+packages = ["dashontology"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
