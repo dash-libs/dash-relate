@@ -30,7 +30,7 @@ jobs:
         run: pip install -e ".[dev]" pytest pytest-cov
 
       - name: Run tests
-        run: pytest tests/ -v --cov=dashrelate --cov-report=xml --cov-report=term-missing
+        run: pytest tests/ -v --cov=dashontology --cov-report=xml --cov-report=term-missing
 
       - name: Upload coverage
         uses: codecov/codecov-action@v4
@@ -55,7 +55,7 @@ jobs:
 
       - name: Generate docs
         run: |
-          pdoc dashrelate --output-dir docs/api --docformat google
+          pdoc dashontology --output-dir docs/api --docformat google
           echo "Docs generated at $(date -u)" > docs/api/.generated
 
       - name: Upload docs artifact
@@ -98,7 +98,7 @@ jobs:
       - name: Regenerate docs into repo
         run: |
           pip install -e ".[dev]"
-          pdoc dashrelate --output-dir docs/api --docformat google
+          pdoc dashontology --output-dir docs/api --docformat google
 
       - name: Build wheel + sdist
         run: hatch build
@@ -110,7 +110,7 @@ jobs:
           RELEASE_NOTE: ${{ github.event.inputs.release_note }}
         run: |
           cat > RELEASE_NOTES.md << EOF
-          ## DashRelate — Ontology and Lineage v${VERSION}
+          ## DashOntology — Ontology and Lineage v${VERSION}
 
           **Released:** $(date -u '+%Y-%m-%d')
           **Previous:** v${PREV_VERSION}
@@ -124,14 +124,14 @@ jobs:
 
           ### Install
           \`\`\`bash
-          pip install dash-relate==${VERSION}
+          pip install dash-ontology==${VERSION}
           \`\`\`
 
           ### Quick Start (Databricks notebook)
           \`\`\`python
-          %pip install dash-relate==${VERSION}
-          import dashrelate
-          dashrelate.launch()
+          %pip install dash-ontology==${VERSION}
+          import dashontology
+          dashontology.launch()
           \`\`\`
           EOF
 
@@ -185,7 +185,7 @@ jobs:
       id-token: write   # required for OIDC trusted publisher
     environment:
       name: pypi
-      url: https://pypi.org/project/dash-relate
+      url: https://pypi.org/project/dash-ontology
     steps:
       - name: Download dist
         uses: actions/download-artifact@v4
@@ -222,46 +222,46 @@ jobs:
           cp dist/*.whl marketplace-bundle/files/
 
           # Generate companion notebook
-          cat > marketplace-bundle/files/DashRelate — Ontology and Lineage_Quickstart.py << NBEOF
+          cat > marketplace-bundle/files/DashOntology — Ontology and Lineage_Quickstart.py << NBEOF
           # Databricks notebook source
           # MAGIC %md
-          # MAGIC # DashRelate — Ontology and Lineage v${VERSION} — Data Quality for Databricks
+          # MAGIC # DashOntology — Ontology and Lineage v${VERSION} for Databricks
           # MAGIC Install and launch the interactive UI.
 
           # COMMAND ----------
-          # MAGIC %pip install dash-relate==${VERSION}
+          # MAGIC %pip install dash-ontology==${VERSION}
 
           # COMMAND ----------
           dbutils.library.restartPython()
 
           # COMMAND ----------
-          import dashrelate
-          dashrelate.launch()
+          import dashontology
+          dashontology.launch()
           NBEOF
 
           # Generate listing metadata
           cat > marketplace-bundle/listing.json << LEOF
           {
-            "listing_name": "DashRelate — Ontology and Lineage — Data Quality",
+            "listing_name": "DashOntology — Ontology and Lineage",
             "version": "${VERSION}",
             "short_description": "Define entities, relationships and lineage for AI usage",
-            "long_description": "DashRelate — Ontology and Lineage provides an ipywidgets UI inside Databricks notebooks to run data quality checks on DataFrames, Unity Catalog tables, and SQL queries. No coding required for business users.",
+            "long_description": "DashOntology — Ontology and Lineage provides an ipywidgets UI inside Databricks notebooks to auto-infer a data ontology (object types, links, metrics) from lineage graphs. No coding required for business users.",
             "categories": ["Data Governance,AI/ML"],
-            "tags": ["data-quality", "databricks", "unity-catalog", "pyspark"],
+            "tags": ["ontology", "lineage", "databricks", "unity-catalog", "pyspark"],
             "provider": "dash-libs",
-            "documentation_url": "https://github.com/dash-libs/dash-relate",
-            "source_url": "https://github.com/dash-libs/dash-relate",
-            "pypi_package": "dash-relate==${VERSION}"
+            "documentation_url": "https://github.com/dash-libs/dash-ontology",
+            "source_url": "https://github.com/dash-libs/dash-ontology",
+            "pypi_package": "dash-ontology==${VERSION}"
           }
           LEOF
 
           # Zip the bundle
-          cd marketplace-bundle && zip -r ../dashrelate-marketplace-${VERSION}.zip .
-          echo "Bundle created: dashrelate-marketplace-${VERSION}.zip"
+          cd marketplace-bundle && zip -r ../dashontology-marketplace-${VERSION}.zip .
+          echo "Bundle created: dashontology-marketplace-${VERSION}.zip"
 
       - name: Upload Marketplace bundle artifact
         uses: actions/upload-artifact@v4
         with:
           name: marketplace-bundle
-          path: dashrelate-marketplace-*.zip
+          path: dashontology-marketplace-*.zip
           retention-days: 90
