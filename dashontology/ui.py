@@ -102,7 +102,7 @@ def launch():
         placeholder='{"raw_cust": "Customer", "tbl_ord": "Order"}',
         layout=w.Layout(width="100%", height="60px"),
     )
-    infer_btn = dashui.action_button("Infer Ontology", style="success", emoji="🧠")
+    infer_btn = dashui.action_button("Infer Ontology", style="success")
     infer_output = dashui.output_panel()
     ontology_viz = w.HTML(value="")
     json_export = w.Textarea(
@@ -120,7 +120,7 @@ def launch():
             json_export.value = ""
             raw = json_input.value.strip()
             if not raw:
-                print("⚠️  Paste a lineage JSON above")
+                print("Paste a lineage JSON above")
                 return
             try:
                 import json as _json
@@ -143,12 +143,12 @@ def launch():
                 ontology_viz.value = _ontology_html(ontology.to_dict())
                 json_export.value = ontology.to_json()
             except Exception as e:
-                print(f"❌ {e}")
+                print(f"Error: {e}")
 
     infer_btn.on_click(on_infer)
 
     ui = dashui.card([
-        dashui.header("DashOntology — Auto-Inferred Data Ontology", library="dashontology", emoji="🧬"),
+        dashui.header("DashOntology — Auto-Inferred Data Ontology", library="dashontology"),
 
         dashui.section("Step 1: Paste lineage graph"),
         dashui.html(
