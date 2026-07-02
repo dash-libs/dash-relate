@@ -5,7 +5,7 @@ from dashontology.cardinality import infer_cardinality, infer_cardinality_from_r
 from dashontology.inference import infer_ontology
 from dashontology.ui import launch
 
-__version__ = "0.1.3"
+__version__ = "0.1.4"
 __all__ = [
     "ObjectType", "Link", "Metric", "Property", "OntologyGraph",
     "normalize_name", "singularize", "to_camel_case",
