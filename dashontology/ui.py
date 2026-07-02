@@ -1,6 +1,24 @@
 """DashOntology interactive UI for Databricks notebooks."""
 from __future__ import annotations
 
+_LIBRARY = "dashontology"
+
+
+def env_setup() -> None:
+    """Open the environment setup panel — where should dashontology
+    read/write its configs? Defaults to the notebook's current working
+    directory if never called."""
+    try:
+        import dashui
+        from IPython.display import display
+    except ImportError:
+        raise RuntimeError("ipywidgets required. Run: %pip install ipywidgets") from None
+
+    display(dashui.card([
+        dashui.header("DashOntology — Environment Setup", library=_LIBRARY),
+        dashui.env_setup_panel(_LIBRARY).widget,
+    ]))
+
 
 def _ontology_html(ontology_dict: dict) -> str:
     """Render an ontology graph as a simple HTML entity-relationship diagram."""
@@ -86,6 +104,8 @@ def launch():
 
     import dashui
 
+    saved = dashui.load_config(_LIBRARY, defaults={"min_confidence": 0.6, "include_staging": False, "glossary": ""})
+
     # ── From lineage graph dict (paste JSON) ──────────────────────────────────
     json_input = w.Textarea(
         description="Lineage JSON:",
@@ -93,14 +113,15 @@ def launch():
         layout=w.Layout(width="100%", height="150px"),
     )
     min_conf_slider = w.FloatSlider(
-        description="Min confidence:", value=0.6, min=0.0, max=1.0, step=0.05,
+        description="Min confidence:", value=saved["min_confidence"], min=0.0, max=1.0, step=0.05,
         readout_format=".0%",
     )
-    include_staging_cb = w.Checkbox(value=False, description="Include staging tables")
+    include_staging_cb = w.Checkbox(value=saved["include_staging"], description="Include staging tables")
     glossary_input = w.Textarea(
         description="Glossary (JSON):",
         placeholder='{"raw_cust": "Customer", "tbl_ord": "Order"}',
         layout=w.Layout(width="100%", height="60px"),
+        value=saved["glossary"],
     )
     infer_btn = dashui.action_button("Infer Ontology", style="success")
     infer_output = dashui.output_panel()
@@ -122,6 +143,14 @@ def launch():
             if not raw:
                 print("Paste a lineage JSON above")
                 return
+            try:
+                dashui.save_config(_LIBRARY, {
+                    "min_confidence": min_conf_slider.value,
+                    "include_staging": include_staging_cb.value,
+                    "glossary": glossary_input.value.strip(),
+                })
+            except Exception:
+                pass  # persistence is a convenience, never block the actual operation on it
             try:
                 import json as _json
                 from dashontology.inference import infer_ontology
@@ -147,8 +176,13 @@ def launch():
 
     infer_btn.on_click(on_infer)
 
+    env_accordion = w.Accordion(children=[dashui.env_setup_panel(_LIBRARY).widget])
+    env_accordion.set_title(0, "Environment setup")
+    env_accordion.selected_index = None
+
     ui = dashui.card([
         dashui.header("DashOntology — Auto-Inferred Data Ontology", library="dashontology"),
+        env_accordion,
 
         dashui.section("Step 1: Paste lineage graph"),
         dashui.html(

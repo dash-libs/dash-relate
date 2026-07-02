@@ -3,7 +3,7 @@ from dashontology.models import ObjectType, Link, Metric, Property, OntologyGrap
 from dashontology.naming import normalize_name, singularize, to_camel_case
 from dashontology.cardinality import infer_cardinality, infer_cardinality_from_ratio
 from dashontology.inference import infer_ontology
-from dashontology.ui import launch
+from dashontology.ui import env_setup, launch
 
 __version__ = "0.1.4"
 __all__ = [
@@ -11,5 +11,6 @@ __all__ = [
     "normalize_name", "singularize", "to_camel_case",
     "infer_cardinality", "infer_cardinality_from_ratio",
     "infer_ontology",
+    "env_setup",
     "launch",
 ]
