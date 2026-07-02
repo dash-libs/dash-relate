@@ -8,11 +8,9 @@ ObjectTypes, Links, and Metrics.
 No AI, no LLM, no Spark — pure deterministic heuristics.
 """
 from __future__ import annotations
-from typing import Optional
 
 from dashontology.models import ObjectType, Link, Metric, OntologyGraph, Property
 from dashontology.naming import normalize_name
-from dashontology.cardinality import infer_cardinality
 
 # Column names that are almost certainly primary keys
 _PK_NAMES = {"id", "pk", "key", "uuid", "guid"}
@@ -224,7 +222,7 @@ def infer_ontology(
     -------
     OntologyGraph with ObjectType, Link, and Metric lists.
     """
-    from dashontology.models import ObjectType, Link, Metric, OntologyGraph
+    from dashontology.models import ObjectType, Metric, OntologyGraph
 
     tables_raw = lineage_graph.get("tables", {})
     table_edges = lineage_graph.get("table_edges", [])
@@ -299,7 +297,7 @@ def infer_ontology(
     if not links:
         links = _infer_links_from_naming(tables_raw, name_map)
 
-    links = [l for l in links if l.confidence >= min_confidence]
+    links = [link for link in links if link.confidence >= min_confidence]
 
     return OntologyGraph(object_types=object_types, links=links, metrics=metrics)
 

@@ -5,7 +5,7 @@ All classes are plain dataclasses — no Spark, no UC dependency.
 """
 from __future__ import annotations
 import json
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from typing import Optional
 
 
@@ -70,10 +70,10 @@ class OntologyGraph:
         return next((o for o in self.object_types if o.name == name), None)
 
     def links_from(self, type_name: str) -> list[Link]:
-        return [l for l in self.links if l.from_type == type_name]
+        return [link for link in self.links if link.from_type == type_name]
 
     def links_to(self, type_name: str) -> list[Link]:
-        return [l for l in self.links if l.to_type == type_name]
+        return [link for link in self.links if link.to_type == type_name]
 
     # ── Summary ──────────────────────────────────────────────────────────────
 
@@ -83,7 +83,7 @@ class OntologyGraph:
             "links": len(self.links),
             "metrics": len(self.metrics),
             "high_confidence_objects": sum(1 for o in self.object_types if o.confidence >= 0.8),
-            "high_confidence_links": sum(1 for l in self.links if l.confidence >= 0.8),
+            "high_confidence_links": sum(1 for link in self.links if link.confidence >= 0.8),
         }
 
     # ── Export ───────────────────────────────────────────────────────────────
@@ -114,17 +114,17 @@ class OntologyGraph:
             ],
             "links": [
                 {
-                    "name": l.name,
-                    "from": l.from_type,
-                    "to": l.to_type,
-                    "cardinality": l.cardinality,
-                    "from_column": l.from_column,
-                    "to_column": l.to_column,
-                    "via_table": l.via_table,
-                    "confidence": round(l.confidence, 3),
-                    "description": l.description,
+                    "name": link.name,
+                    "from": link.from_type,
+                    "to": link.to_type,
+                    "cardinality": link.cardinality,
+                    "from_column": link.from_column,
+                    "to_column": link.to_column,
+                    "via_table": link.via_table,
+                    "confidence": round(link.confidence, 3),
+                    "description": link.description,
                 }
-                for l in self.links
+                for link in self.links
             ],
             "metrics": [
                 {

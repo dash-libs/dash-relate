@@ -49,7 +49,7 @@ def _ontology_html(ontology_dict: dict) -> str:
         )
 
     obj_html = "".join(_card(o) for o in objects)
-    link_rows = "".join(_link_row(l) for l in links)
+    link_rows = "".join(_link_row(link) for link in links)
     metric_names = ", ".join(m["name"] for m in metrics) if metrics else "none"
 
     return f"""

@@ -1,13 +1,17 @@
-# CLAUDE.md — dash-relate
+# CLAUDE.md — dash-ontology
 
 Part of the **Dashlibs** suite. See ~/dashlibs for the full context.
 
 ## Purpose
-Ontology builder for entities+relationships+lineage. Outputs AI-consumable Delta table. ontology.py=OntologyBuilder
+Auto-infers a data ontology (object types, links, metrics) from lineage
+graphs — no AI tokens required. `inference.py`=`infer_ontology()`,
+`models.py`=`ObjectType`/`Link`/`Metric`/`Property`/`OntologyGraph`.
 
 ## Structure
-- `/ui.py`       — ipywidgets UI, `launch()` entrypoint
-- `/*.py`        — core logic
+- `/ui.py`         — ipywidgets UI, `launch()` entrypoint
+- `/inference.py`  — core inference engine
+- `/models.py`      — dataclasses for the ontology graph
+- `/cardinality.py`, `/naming.py`, `/_classifier_bridge.py` — inference helpers
 - `tests/`           — pytest, no Spark dependency for unit tests
 
 ## Key Design Rules
